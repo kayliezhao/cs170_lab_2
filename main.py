@@ -108,8 +108,8 @@ def main():
     data = []
     print("Welcome to the Feature Selection Algorithm")
     print("Input name the dataset you want to use:")
-    print("Ex: CS170_Small_DataSet_85.txt \n")
-    #CS170_Small_DataSet_85.txt
+    print("Ex: CS170_Small_DataSet__85.txt \n")
+    #CS170_Small_DataSet__85.txt
     #CS170_Large_DataSet__98.txt
     #SanityCheck_DataSet__1.txt
     #SanityCheckDataSet__2.txt
