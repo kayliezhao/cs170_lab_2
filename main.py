@@ -143,7 +143,7 @@ def main():
         forward_search(data)
         end_time = time.time()
 
-        print(f"Total time{end_time - start_time:.2f} seconds")
+        print(f"Total time: ~ {end_time - start_time:.2f} seconds")
 
     elif(option == "2"):
         print("Backward Selection Algorithm\n")
