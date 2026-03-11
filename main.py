@@ -9,7 +9,8 @@ size = 0
     # "--Considering adding the xxx feature"
     # "On level x I added feature x to current set"
 
-# forward search algorithm
+global_accuracy = 0; 
+# forward algorithm
 def forward_search(data):
     curr_set_of_features = [] #initialize an empty set
     best_features = []
@@ -46,10 +47,44 @@ def forward_search(data):
 
 
 # forward search
-#backwards search is same, just change the inequalities
-def backward_search(data):
-    curr_set_of_features = []
-    print("filler for backwardsearch")
+# backwards search is same, just change the inequalities
+# starts full, then remove 
+def backward_elimination(data):
+    curr_set_of_features = list(range(1, data.shape[1]))
+    best_features = list(curr_set_of_features)
+    best_accuracy = 0
+
+    for i in range(data.shape[1] - 1):
+        print(f"On the {i+1}th level of the search tree")
+        feature_to_remove = None
+        best_accuracy_so_far = 0
+
+        for k in curr_set_of_features:
+            # if is empty
+            temp_set = [f for f in curr_set_of_features if f != k]
+            if not temp_set:
+                continue
+
+            accuracy = leave_one_out_cross_validation(data, temp_set[:-1], temp_set[-1])
+            # print(f"Removing feature {k}, remaining {set(temp_set)}, accuracy is {accuracy*100:.1f}%")
+            print(f"Using feature {set(curr_set_of_features + [k])}, the accuracy is {accuracy*100:.1f}%")
+
+            if accuracy > best_accuracy_so_far:
+                best_accuracy_so_far = accuracy
+                feature_to_remove = k
+
+        if feature_to_remove is not None:
+            curr_set_of_features.remove(feature_to_remove) 
+            print(f"On level {i}, feature '{feature_to_remove}' was removed in current set.")
+            print(f"Feature set {set(curr_set_of_features)} was best, accuracy is {best_accuracy_so_far*100:.1f}%")
+
+            if best_accuracy_so_far > best_accuracy:
+                best_accuracy = best_accuracy_so_far
+                best_features = list(curr_set_of_features)
+        else:
+            print("(Warning: Accuracy has decreased! Continuing search in case of local maxima)")
+
+    print(f"\nFinished search!\n The best feature subset is {set(best_features)}, which has an accuracy of {best_accuracy*100:.1f}%")
     return
 
 def num2str(i):
@@ -63,9 +98,6 @@ def int2str(i):
 #accuracy 
 # echo numbers it returned to the screen
 def leave_one_out_cross_validation(data, current_set, feature_to_add):
-    # data = load('filename)
-    # data = []
-    # with open(filename, "r") as f:
     number_correctly_classified = 0
 
     for i in range(data.shape[0]):
@@ -107,7 +139,7 @@ def label_object_to_classify():
 def main():
     data = []
     print("Welcome to the Feature Selection Algorithm")
-    print("Input name the dataset you want to use:")
+    print("Input name of the dataset you want to use:")
     print("Ex: CS170_Small_DataSet__85.txt \n")
     #CS170_Small_DataSet__85.txt
     #CS170_Large_DataSet__98.txt
@@ -148,6 +180,12 @@ def main():
 
     elif(option == "2"):
         print("Backward Selection Algorithm\n")
+        start_time = time.time()
+        backward_elimination(data)
+        end_time = time.time()
+
+        print(f"Total time: ~ {end_time - start_time:.2f} seconds")
+
     else:
         print("Invalid input. Only enter 1 or 2\n")
         return
