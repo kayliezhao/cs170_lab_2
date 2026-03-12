@@ -1,15 +1,6 @@
-import json
 import numpy as np
 import time
 
-size = 0
-
-# // printing
-    # "On the _th level of the search tree"
-    # "--Considering adding the xxx feature"
-    # "On level x I added feature x to current set"
-
-global_accuracy = 0; 
 # forward algorithm
 def forward_search(data):
     curr_set_of_features = [] #initialize an empty set
@@ -24,7 +15,6 @@ def forward_search(data):
         for k in range(1, data.shape[1]):
             # if is empty
             if k not in curr_set_of_features:
-                # print(f"Considering adding the {k} feature")
                 accuracy = leave_one_out_cross_validation(data, curr_set_of_features, k)
                 print(f"Using feature {set(curr_set_of_features + [k])}, the accuracy is {accuracy*100:.1f}%")
                 if accuracy > best_accuracy_so_far:
@@ -41,10 +31,7 @@ def forward_search(data):
         else:
             print("(Warning: Accuracy has decreased! Continuing search in case of local maxima)")
 
-        # curr_set_of_features[i] = feature_to_add_at_this_level
-        # print("On level", num2str(i), "I added feature ", num2str(feature_to_add_at_this_level), " to current set")
     print(f"\nFinished search!\n The best feature subset is {set(best_features)}, which has an accuracy of {best_accuracy*100:.1f}%")
-
 
 # forward search
 # backwards search is same, just change the inequalities
@@ -88,11 +75,9 @@ def backward_elimination(data):
     return
 
 def num2str(i):
-    # print("filler for num2str")
     return str(i)
 
 def int2str(i):
-    # print("filler for int2str")
     return str(i)
 
 #accuracy 
@@ -108,10 +93,7 @@ def leave_one_out_cross_validation(data, current_set, feature_to_add):
 
         nearest_neighbor_distance = float('inf')
         nearest_neighbor_location = float('inf')
-        # print("Looping over i, at the ", int2str(i), " location")
-        # print("The ", int2str(i), "th object is in class ", num2str(label_object_to_classify))
         for k in range(data.shape[0]):
-            # print("Ask if", int2str(i), "is nearest neighbor with ", int2str(k))
             if k != i: # to prevent comparing to self
                 
                 distance = np.sqrt(np.sum((object_to_classify - data[k, features]) ** 2))
@@ -120,10 +102,7 @@ def leave_one_out_cross_validation(data, current_set, feature_to_add):
                     nearest_neighbor_distance = distance
                     nearest_neighbor_location = k
                     nearest_neighbor_label = data[nearest_neighbor_location, 0]
-        
-        # print(["Object ", num2str(i), "is class ", num2str(label_object_to_classify)])
-        # print("Its nearest_neighbor is ", num2str(nearest_neighbor_location), " which is in class ", num2str(nearest_neighbor_label))        
-        
+                
         if label_object_to_classify == nearest_neighbor_label:
             number_correctly_classified += 1
     accuracy = number_correctly_classified / data.shape[0]
@@ -162,7 +141,6 @@ def main():
     
     option = input().strip()
 
-
     print(f"This dataset has {n_features} features (not including the class attribute), with {n_instances}.\n")
 
     features = list(range(1, n_features+1))
@@ -189,15 +167,6 @@ def main():
     else:
         print("Invalid input. Only enter 1 or 2\n")
         return
-
-
-    # print(f"Running nearest neighbor with all {n_features} features, using {evaluation} evaluation, I get an accuracy of {accuracy}% ")
-
-    # "On the _th level of the search tree"
-    # "--Considering adding the xxx feature"
-    # "On level x I added feature x to current set"
-
-    # return
-
+    
 if __name__ == "__main__":
     main()
